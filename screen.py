@@ -7,9 +7,12 @@ from datetime import datetime
 
 import RPi.GPIO as GPIO
 
+print("Imported Libraries")
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(27, GPIO.IN)
 GPIO.setup(22, GPIO.OUT)
+print("GPIO Settings created")
 
 def destroy():
     lcd.clear()
@@ -45,6 +48,7 @@ def loop():
             ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
             ser.reset_input_buffer()
             ser.write(b'0')
+            print("Sent Serial Command of 0")
             if ser.in_waiting > 0:
                 line = ser.readline().decode('utf-8').rstrip()
                 print(line)
@@ -59,9 +63,11 @@ def loop():
             ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
             ser.reset_input_buffer()
             ser.write(b'1')
+            print("Sent Serial Command of 1")
             if ser.in_waiting > 0:
                 line = ser.readline().decode('utf-8').rstrip()
                 print(line)
+            
                 
         else:
             print("Something is fucky wucky")
