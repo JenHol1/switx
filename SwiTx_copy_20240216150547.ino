@@ -37,14 +37,14 @@ void loop() {
     inByte = (Serial.read()); // Read byte from serial port
 
     // Toggle the Device state 
-    if (inByte == '1') {
+    if (inByte == '1') { //Switches to B
       digitalWrite(MuteA, LOW);  // Turn the MuteA ON
       digitalWrite(MuteB, LOW);  // Turn the MuteB ON
 
       delay(100);                // Delay 
 
       digitalWrite(PlexA1, HIGH);  // Turn the PlexA1 ON 1
-      digitalWrite(PlexB1, HIGH);  // Turn the PlexB1 ON 1
+      digitalWrite(PlexB1, HIGH);  // Turn the PlexB1 ON 1 (Switched to Channel B)
 
       delay(100);                // Delay
 
@@ -53,14 +53,14 @@ void loop() {
       
       Serial.println("Switched to B");
 
-    } else if (inByte == '0') {
+    } else if (inByte == '0') { //Switches to A
       digitalWrite(MuteA, LOW);  // Turn the MuteA ON
       digitalWrite(MuteB, LOW);  // Turn the MuteB ON
 
       delay(100);                // Delay
 
       digitalWrite(PlexA1, LOW);  // Turn the PlexA1 ON 0
-      digitalWrite(PlexB1, LOW);  // Turn the PlexB1 ON 0
+      digitalWrite(PlexB1, LOW);  // Turn the PlexB1 ON 0 (Switched to Channel A)
 
       delay(100);                // Delay
 

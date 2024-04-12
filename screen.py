@@ -35,6 +35,7 @@ def loop():
 
     destroy()
 
+#Switching to B needs to send a 1
 
     while(True):
             
@@ -49,6 +50,7 @@ def loop():
             ser.reset_input_buffer()
             ser.write(b'0')
             print("Sent Serial Command of 0")
+            ser.write(b'1')
             if ser.in_waiting > 0:
                 line = ser.readline().decode('utf-8').rstrip()
                 print(line)
@@ -64,6 +66,7 @@ def loop():
             ser.reset_input_buffer()
             ser.write(b'1')
             print("Sent Serial Command of 1")
+            ser.write(b'0')
             if ser.in_waiting > 0:
                 line = ser.readline().decode('utf-8').rstrip()
                 print(line)
