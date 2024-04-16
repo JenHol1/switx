@@ -89,3 +89,4 @@ if __name__ == '__main__': #Initalise the program
         loop()
     except KeyboardInterrupt:
         destroy()
+        GPIO.cleanup()
