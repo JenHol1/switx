@@ -4,17 +4,16 @@ from PCF8574 import PCF8574_GPIO
 from Adafruit_LCD1602 import Adafruit_CharLCD
 from time import sleep, strftime
 from datetime import datetime
-
 import RPi.GPIO as GPIO
 
-print("Imported Libraries")
+print("Imported Libraries") #Debug
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(27, GPIO.IN)
-GPIO.setup(22, GPIO.OUT)
-print("GPIO Settings created")
+GPIO.setmode(GPIO.BCM) #Setting GPIO Pins
+GPIO.setup(27, GPIO.IN) #Sets GPIO Pin 27 as an Input
+GPIO.setup(22, GPIO.OUT) #Sets GPIO Pin 22 as an Output - Debugging Tool
+print("GPIO Settings created") #Debug
 
-def destroy():
+def destroy(): #Used to clear the LCD
     lcd.clear()
     
 def get_time_now():     # get system time
@@ -26,54 +25,48 @@ def loop():
     lcd.begin(16, 2)     # set number of LCD lines and columns
 
 
-    n=4
-    for i in range(0, n):
+    n=4 #Loop for startup for 5 seconds
+    for i in range(0, n): 
         lcd.setCursor(0, 0)    
-        lcd.message("     SwiTx \n") #Startup
-        lcd.message (get_time_now())
-        sleep(1)
+        lcd.message("     SwiTx \n") #Display SwiTx on the first line of the LCD
+        lcd.message (get_time_now()) #Display the current time as the second line of the LCD
+        sleep(1) 
 
-    destroy()
+    destroy() #Clears LCD
 
 #Switching to B needs to send a 1
 
     while(True):
             
-        if GPIO.input(27) == 1:
-            print("Input was high")
+        if GPIO.input(27) == 1: #When the GPIO Pin 27 receives a HIGH signal it will do the following
+            print("Input was high") #Debugging line
             lcd.setCursor(0, 0)  # set cursor position
-            lcd.message ("    Receiving \n")
-            lcd.message("    Output B")
+            lcd.message ("    Receiving \n") #Spaces are used to centre the text, displays the fact the device is receiving a signal
+            lcd.message("    Output B") #Displays the active output
             sleep(1)
-            GPIO.output(22, GPIO.LOW)
-            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+            GPIO.output(22, GPIO.LOW) #Debug line
+            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #Starts a serial session with the Arduino
             ser.reset_input_buffer()
-            ser.write(b'0')
+            ser.write(b'0') #Sends a 0 to the Arduino
             print("Sent Serial Command of 0")
-            ser.write(b'1')
-            if ser.in_waiting > 0:
-                line = ser.readline().decode('utf-8').rstrip()
-                print(line)
+            if ser.in_waiting > 0: #Awaits for a response from the arduino
+                line = ser.readline().decode('utf-8').rstrip() #Decodes the message from the Arduino
+                print(line) #Prints that message from the arduino
 
-        if GPIO.input(27) == 0:
-            print("Input was low")
-            lcd.setCursor(0, 0)
-            lcd.message("    Standby    \n")# 
-            lcd.message("    Output A")   
+        if GPIO.input(27) == 0: #When GPIO Pin 27 receives a LOW signal it will do:
+            print("Input was low") #Debug line
+            lcd.setCursor(0, 0) #Setting the cursor position
+            lcd.message("    Standby    \n") #Displays that the device is awaiting a signal
+            lcd.message("    Output A")   #Displays the active output
             sleep(1)
-            GPIO.output(22, GPIO.HIGH)
-            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+            GPIO.output(22, GPIO.HIGH) #Debug
+            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #Starts a serial session with the Arduino
             ser.reset_input_buffer()
-            ser.write(b'1')
+            ser.write(b'1') #Sends the Arduion a 1
             print("Sent Serial Command of 1")
-            ser.write(b'0')
-            if ser.in_waiting > 0:
-                line = ser.readline().decode('utf-8').rstrip()
-                print(line)
-            
-                
-        else:
-            print("Something is fucky wucky")
+            if ser.in_waiting > 0: #Awaits a response from the Arduino
+                line = ser.readline().decode('utf-8').rstrip() #Decodes the Arduino message
+                print(line) #Prints the message from the Arduino
 
 
 PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
@@ -90,7 +83,7 @@ except:
 # Create LCD, passing in MCP GPIO adapter.
 lcd = Adafruit_CharLCD(pin_rs=0, pin_e=2, pins_db=[4,5,6,7], GPIO=mcp)
 
-if __name__ == '__main__':
+if __name__ == '__main__': #Initalise the program
     print ('Program is starting ... ')
     try:
         loop()
