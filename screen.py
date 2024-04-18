@@ -37,7 +37,7 @@ def loop():
 
     while(True):
             
-        if GPIO.input(27) == 1 or GPIO.input(22) == 1: #When the GPIO Pin 27 receives a HIGH signal it will do the following
+        if GPIO.input(27) == 1 or GPIO.input(22) == 1: #When the GPIO Pin 27 receives a HIGH signal or the button on the breadboard is pressed
             print("Input was high") #Debugging line
             lcd.setCursor(0, 0)  # set cursor position
             lcd.message ("    Receiving \n") #Spaces are used to centre the text, displays the fact the device is receiving a signal
@@ -51,7 +51,7 @@ def loop():
                 line = ser.readline().decode('utf-8').rstrip() #Decodes the message from the Arduino
                 print(line) #Prints that message from the arduino
 
-        if GPIO.input(27) == 0 and GPIO.input(22) == 0: #When GPIO Pin 27 receives a LOW signal it will do:
+        if GPIO.input(27) == 0 and GPIO.input(22) == 0: #When GPIO Pin 27 and the breadboard button is not pressed
             print("Input was low") #Debug line
             lcd.setCursor(0, 0) #Setting the cursor position
             lcd.message("    Standby    \n") #Displays that the device is awaiting a signal
