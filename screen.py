@@ -9,8 +9,7 @@ import RPi.GPIO as GPIO
 print("Imported Libraries") #Debug
 
 GPIO.setmode(GPIO.BCM) #Setting GPIO Pins
-GPIO.setup(27, GPIO.IN) #Sets GPIO Pin 27 as an Input
-GPIO.setup(22, GPIO.OUT) #Sets GPIO Pin 22 as an Output - Debugging Tool
+GPIO.setup(22, GPIO.IN) #Sets GPIO Pin 27 as an Input
 print("GPIO Settings created") #Debug
 
 def destroy(): #Used to clear the LCD
@@ -38,13 +37,12 @@ def loop():
 
     while(True):
             
-        if GPIO.input(27) == 1: #When the GPIO Pin 27 receives a HIGH signal it will do the following
+        if GPIO.input(22) == 1: #When the GPIO Pin 27 receives a HIGH signal it will do the following
             print("Input was high") #Debugging line
             lcd.setCursor(0, 0)  # set cursor position
             lcd.message ("    Receiving \n") #Spaces are used to centre the text, displays the fact the device is receiving a signal
             lcd.message("    Output B") #Displays the active output
             sleep(1)
-            GPIO.output(22, GPIO.LOW) #Debug line
             ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #Starts a serial session with the Arduino
             ser.reset_input_buffer()
             ser.write(b'0') #Sends a 0 to the Arduino
@@ -53,13 +51,12 @@ def loop():
                 line = ser.readline().decode('utf-8').rstrip() #Decodes the message from the Arduino
                 print(line) #Prints that message from the arduino
 
-        if GPIO.input(27) == 0: #When GPIO Pin 27 receives a LOW signal it will do:
+        if GPIO.input(22) == 0: #When GPIO Pin 27 receives a LOW signal it will do:
             print("Input was low") #Debug line
             lcd.setCursor(0, 0) #Setting the cursor position
             lcd.message("    Standby    \n") #Displays that the device is awaiting a signal
             lcd.message("    Output A")   #Displays the active output
             sleep(1)
-            GPIO.output(22, GPIO.HIGH) #Debug
             ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #Starts a serial session with the Arduino
             ser.reset_input_buffer()
             ser.write(b'1') #Sends the Arduion a 1
