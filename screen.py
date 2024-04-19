@@ -9,8 +9,9 @@ import RPi.GPIO as GPIO
 print("Imported Libraries") #Debug
 
 GPIO.setmode(GPIO.BCM) #Setting GPIO Pins
-GPIO.setup(27, GPIO.IN) #Sets GPIO Pin 22 as an Input
-GPIO.setup(22, GPIO.IN) #Sets GPIO Pin 22 as an Input
+GPIO.setup(27, GPIO.IN, GPIO.PUD_DOWN) #Sets GPIO Pin 27 as an Input
+GPIO.setup(17, GPIO.IN, GPIO.PUD_DOWN) #Sets GPIO Pin 17 as an Input
+
 
 def destroy(): #Used to clear the LCD
     lcd.clear()
@@ -37,12 +38,13 @@ def loop():
 
     while(True):
             
-        if GPIO.input(27) == 1 or GPIO.input(22) == 1: #When the GPIO Pin 27 receives a HIGH signal or the button on the breadboard is pressed
+        if GPIO.input(27) == 1 or GPIO.input(17) == 1: #When the GPIO Pin 27 receives a HIGH signal or the button on the breadboard is pressed
+            print(GPIO.input(27)) #Debugging
+            print(GPIO.input(17)) #Debugging
             print("Input was high") #Debugging line
             lcd.setCursor(0, 0)  # set cursor position
             lcd.message ("    Receiving \n") #Spaces are used to centre the text, displays the fact the device is receiving a signal
             lcd.message("    Output B") #Displays the active output
-            sleep(1)
             ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #Starts a serial session with the Arduino
             ser.reset_input_buffer()
             ser.write(b'0') #Sends a 0 to the Arduino
@@ -50,13 +52,15 @@ def loop():
             if ser.in_waiting > 0: #Awaits for a response from the arduino
                 line = ser.readline().decode('utf-8').rstrip() #Decodes the message from the Arduino
                 print(line) #Prints that message from the arduino
+            sleep(0.1)
 
-        if GPIO.input(27) == 0 and GPIO.input(22) == 0: #When GPIO Pin 27 and the breadboard button is not pressed
+        if GPIO.input(27) == 0 and GPIO.input(17) == 0: #When GPIO Pin 27 and the breadboard button is not pressed
+            print(GPIO.input(27))#Debugging
+            print(GPIO.input(17))#Debugging
             print("Input was low") #Debug line
             lcd.setCursor(0, 0) #Setting the cursor position
             lcd.message("    Standby    \n") #Displays that the device is awaiting a signal
             lcd.message("    Output A")   #Displays the active output
-            sleep(1)
             ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #Starts a serial session with the Arduino
             ser.reset_input_buffer()
             ser.write(b'1') #Sends the Arduion a 1
@@ -64,6 +68,7 @@ def loop():
             if ser.in_waiting > 0: #Awaits a response from the Arduino
                 line = ser.readline().decode('utf-8').rstrip() #Decodes the Arduino message
                 print(line) #Prints the message from the Arduino
+            sleep(0.1)
 
 
 PCF8574_address = 0x27  # I2C address of the PCF8574 chip.
